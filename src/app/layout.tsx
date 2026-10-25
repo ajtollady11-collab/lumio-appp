@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { brand } from "@/lib/brand";
 import { publicEnv } from "@/lib/env/public";
 
-import { atkinson, fraunces } from "./fonts";
+import { inter } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -11,28 +11,35 @@ export const metadata: Metadata = {
     ? new URL(publicEnv.NEXT_PUBLIC_SITE_URL)
     : undefined,
   title: {
-    default: brand.name,
-    template: `%s | ${brand.name}`,
+    default: `${brand.name} — ${brand.tagline}`,
+    template: `%s · ${brand.name}`,
   },
-  description:
-    "An AI tutor for GCSE Maths, in development. It teaches, sets practice, checks your working and plans revision from what you actually did.",
+  description: brand.description,
+  applicationName: brand.name,
+  openGraph: {
+    type: "website",
+    siteName: brand.name,
+    title: `${brand.name} — ${brand.tagline}`,
+    description: brand.description,
+    locale: "en_GB",
+  },
+  // Kept out of search results until launch and the trademark check (D21).
   robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fbfaf7" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f1115" },
-  ],
+  themeColor: "#faf9f6",
+  // Lets the layout shrink with the on-screen keyboard so the tutor composer stays visible.
+  interactiveWidget: "resizes-content",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en-GB" className={`${fraunces.variable} ${atkinson.variable} h-full antialiased`}>
+    <html lang="en-GB" className={`${inter.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-bg text-text">
         <a
           href="#main"
-          className="sr-only rounded-md bg-surface px-4 py-2 text-text focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50"
+          className="sr-only rounded-md bg-surface px-4 py-2 text-sm font-medium text-text shadow-raised focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100]"
         >
           Skip to content
         </a>

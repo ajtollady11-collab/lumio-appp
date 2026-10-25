@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ButtonLink } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
@@ -6,13 +6,14 @@ export default function NotFound() {
       id="main"
       className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center px-4 py-20 sm:px-8"
     >
-      <h1 className="font-display text-4xl font-semibold tracking-tight">Page not found</h1>
-      <p className="mt-4 text-lg text-text-muted">
-        This address doesn&apos;t match any page. Check the link, or go back to the home page.
+      <p className="text-sm font-semibold text-primary">404</p>
+      <h1 className="mt-2 text-3xl font-semibold tracking-[-0.025em]">Page not found</h1>
+      <p className="mt-3 text-[0.9375rem] text-text-muted">
+        This address doesn&apos;t match any page. Check the link, or head back home.
       </p>
-      <Link href="/" className="mt-8 w-fit font-semibold text-primary underline underline-offset-4">
+      <ButtonLink href="/" className="mt-8 w-fit">
         Go to the home page
-      </Link>
+      </ButtonLink>
     </main>
   );
 }
