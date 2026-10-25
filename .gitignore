@@ -46,3 +46,6 @@ next-env.d.ts
 # test output
 /playwright-report/
 /test-results/
+
+# sandbox Supabase-equivalent stack (binaries, data, logs)
+/.sandbox-stack/

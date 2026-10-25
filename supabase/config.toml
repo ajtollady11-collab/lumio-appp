@@ -1,0 +1,45 @@
+# Supabase CLI configuration for LOCAL development and CI only (`supabase start`).
+# Hosted projects are configured in the Supabase dashboard; see docs/runbook/owner-setup.md.
+project_id = "lumio"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 17
+
+[db.seed]
+enabled = false
+
+[studio]
+enabled = false
+
+[realtime]
+enabled = false
+
+[storage]
+enabled = false
+
+[edge_runtime]
+enabled = false
+
+[analytics]
+enabled = false
+
+[auth]
+enabled = true
+site_url = "http://localhost:3100"
+additional_redirect_urls = ["http://localhost:3100/auth/callback", "http://localhost:3000/auth/callback"]
+jwt_expiry = 3600
+enable_signup = true
+minimum_password_length = 8
+
+[auth.email]
+enable_signup = true
+# Local and CI only: accounts are usable without clicking an email link.
+enable_confirmations = false
