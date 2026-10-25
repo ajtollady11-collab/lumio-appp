@@ -54,6 +54,24 @@ describe("server-only boundary", () => {
     expect(offenders).toEqual([]);
   });
 
+  it('marks every server action module with "use server" and import "server-only"', () => {
+    const offenders = files
+      .filter((f) => f.path.startsWith("src/actions/"))
+      .filter(
+        (f) =>
+          !/^["']use server["'];?\s*\n\s*import\s+["']server-only["']/.test(f.source.trimStart()),
+      )
+      .map((f) => f.path);
+    expect(offenders).toEqual([]);
+  });
+
+  it("never uses a Supabase service-role key or a browser Supabase client", () => {
+    const offenders = files
+      .filter((f) => /service_role|SERVICE_ROLE|createBrowserClient/.test(f.source))
+      .map((f) => f.path);
+    expect(offenders).toEqual([]);
+  });
+
   it("only reads non-public process.env values inside src/server or the env schema", () => {
     const allowed = (path: string) =>
       path.startsWith("src/server/") || path === "src/lib/env/schema.ts";
