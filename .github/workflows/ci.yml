@@ -35,9 +35,14 @@ jobs:
         run: pnpm test
 
   build-e2e:
-    name: Build and end-to-end
+    name: Database, build and end-to-end
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
+    env:
+      # E2E uses the deterministic test tutor (replies are labelled "not AI");
+      # the environment schema refuses this provider in production.
+      TUTOR_PROVIDER: test
+      NEXT_PUBLIC_SITE_URL: http://localhost:3100
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -46,6 +51,22 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Start local Supabase and apply migrations
+        run: supabase start
+      - name: Export local Supabase URL and key
+        run: |
+          supabase status -o env > supabase.env
+          set -a; . ./supabase.env; set +a
+          echo "SUPABASE_URL=${API_URL}" >> "$GITHUB_ENV"
+          echo "SUPABASE_PUBLISHABLE_KEY=${PUBLISHABLE_KEY:-$ANON_KEY}" >> "$GITHUB_ENV"
+          rm supabase.env
+      - name: Generated database types are up to date
+        run: pnpm db:types:check
+      - name: Row-level security and RPC integration tests
+        run: pnpm test:integration
       - name: Production build
         run: pnpm build
       - name: Client bundle secret scan

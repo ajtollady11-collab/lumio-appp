@@ -27,15 +27,18 @@ version (16.x, Cache Components on) differs from older training data.
 
 ## Commands
 
-| Task                                           | Command             |
-| ---------------------------------------------- | ------------------- |
-| Install                                        | `pnpm install`      |
-| Dev server                                     | `pnpm dev`          |
-| All fast checks (types, lint, format, unit)    | `pnpm check`        |
-| Unit tests                                     | `pnpm test`         |
-| Production build                               | `pnpm build`        |
-| Secret scan of the client bundle (after build) | `pnpm check:bundle` |
-| End-to-end tests (after build)                 | `pnpm test:e2e`     |
+| Task                                           | Command                                   |
+| ---------------------------------------------- | ----------------------------------------- |
+| Install                                        | `pnpm install`                            |
+| Dev server                                     | `pnpm dev`                                |
+| All fast checks (types, lint, format, unit)    | `pnpm check`                              |
+| Unit tests                                     | `pnpm test`                               |
+| Production build                               | `pnpm build`                              |
+| Secret scan of the client bundle (after build) | `pnpm check:bundle`                       |
+| End-to-end tests (after build)                 | `pnpm test:e2e`                           |
+| RLS / database integration tests               | `pnpm test:integration`                   |
+| Regenerate / check database types              | `pnpm db:types` / `pnpm db:types:check`   |
+| Docker-free local Supabase (this sandbox)      | `pnpm sandbox up` then `pnpm sandbox env` |
 
 In this sandbox, run Playwright with `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers`.
 
@@ -48,10 +51,14 @@ src/
     api/               route handlers
     fonts/             self-hosted font files + OFL licences
   components/          UI; must not import src/server
+  actions/             server actions; each file starts with "use server" + import "server-only"
   lib/                 shared, browser-safe code (env schema, brand); must not import src/server
   server/              server-only modules; every file starts with `import "server-only"`
+supabase/              migrations (the only way to change the schema) + local CLI config
+scripts/sandbox-stack/ Docker-free local Supabase used where Docker is unavailable
 tests/
   unit/                cross-cutting unit tests (architecture guardrails)
+  integration/         RLS and RPC tests against a real local Supabase
   e2e/                 Playwright
 docs/                  ADRs, milestones, runbook
 ```
